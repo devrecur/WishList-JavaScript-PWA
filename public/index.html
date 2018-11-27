@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#4285f4">
+
+
+  <title>Wish List</title>
+
+
+  <link rel="stylesheet" type="text/css" href="styles/materialize.css">
+  <link rel="stylesheet" type="text/css" href="styles/style.css">
+
+
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Add to home screen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Wish List">
+  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+  <!-- Windows -->
+  <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#2F3BA2">
+
+  <link rel="icon" type="image/png" href="images/icons/icon-144x144.png">
+</head>
+
+<body>
+
+  <div class="navbar-fixed">
+    <nav class="nav-extended">
+      <div class="nav-wrapper blue darken-4">
+        <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        <a href="#" class="brand-logo center">Wish List</a>
+        <a href="#" class="search-btn right" style="margin: 0px 18px;"><i class="material-icons">search</i></a>
+      </div>
+      <div class="nav-content blue darken-4 hide" id="search-box">
+          <div class="row">
+              <div class="input-field col s9">
+                <input type="text" id="search-input" class="autocomplete">
+                <label for="autocomplete-input">Search</label>
+              </div>
+              <div class="input-field col s2 pull-s2">
+                  <a href="#" id="search-check" class="left"><i class="material-icons">check</i></a>
+                  <a href="#" id="search-clear" class="right"><i class="material-icons">clear</i></a>
+              </div>
+            </div>
+      </div>
+    </nav>
+  </div>
+
+
+  <main class="container">
+    <div class="row">
+      <div class="col s12">
+
+        <ul class="side-nav" id="slide-out">
+          
+          <li>
+              <a href="#" data-activates="slide-out" class="right close-side-nav"><i class="material-icons" style="margin:0;">close</i></a>
+              <a class="subheader">Filters</a>
+          </li>
+          <li class="input-field col s12">
+            <select class="categoryList">
+              <option value="" disabled selected>Choose your option</option>
+            </select>
+            <label>Category</label>
+          </li>
+          <li class="input-field col s12">
+            <select class="subCategoryList">
+              <option value="" disabled selected>Choose your option</option>
+            </select>
+            <label>Sub Category</label>
+          </li>
+          <li class="input-field col s12">
+            <select class="storeList">
+              <option value="" disabled selected>Choose your option</option>
+            </select>
+            <label>Store</label>
+          </li>
+          <li><a class="subheader"></a></li>
+          <li class="input-field col s12">
+              <a class="waves-effect waves-light btn reset-filters">Reset</a>
+          </li>
+        </ul>
+
+        <div class="row">
+          <div class="col s12">
+            
+            <ul class="collection">
+            </ul>
+            <div class="preloader-wrapper big active">
+              <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                  <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                  <div class="circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+  </main>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script type="text/javascript" src="scripts/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="scripts/materialize.js"></script>
+  <script type="text/javascript" src="scripts/d3.v4.min.js"></script>
+  <script type="text/javascript" src="scripts/app.js"></script>
+
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBYFvzNjgoPMqpxBl-aCpN6FYv7gnQhCJ8",
+      authDomain: "wishlist-af6f7.firebaseapp.com",
+      databaseURL: "https://wishlist-af6f7.firebaseio.com",
+      projectId: "wishlist-af6f7",
+      storageBucket: "",
+      messagingSenderId: "584283327393"
+    };
+    firebase.initializeApp(config);
+  </script> -->
+</body>
+
+</html>
