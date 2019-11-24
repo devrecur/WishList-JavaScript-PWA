@@ -51,17 +51,17 @@
 	 * Loads the CSV file
 	 */
 
-	setTimeout(()=> {
+	setTimeout(() => {
 		loadData();
-	},0);
+	}, 0);
 
 
-	function getFavList(){
+	function getFavList() {
 		favListIds = JSON.parse(localStorage.getItem('favListIds')) || [];
 		favList = JSON.parse(localStorage.getItem('favList')) || [];
 	}
 
-	function saveFavList(){
+	function saveFavList() {
 		localStorage.setItem("favListIds", JSON.stringify(favListIds));
 		localStorage.setItem("favList", JSON.stringify(favList));
 	}
@@ -100,8 +100,6 @@
 			Materialize.scrollFire(options);
 
 			moreData();
-
-
 			// Events
 			categorySelectEle.on('change', function () {
 				var selectedCategory = this.value;
@@ -117,7 +115,7 @@
 
 					subCateogiesList = [];
 					subCateogiesList = groupBySubCategory.map(element => {
-						return element.key;
+						return element.key.trim();
 					});
 
 					storeList = [];
@@ -158,31 +156,6 @@
 				}
 			});
 
-			$('.add-to-fav').click(event => {
-				console.log(event.currentTarget.dataset.id);
-				let id = event.currentTarget.dataset.id || 0;
-				let listItem = getListItemById(allData, id);
-				if(listItem){
-					favList.push(listItem);
-					favListIds.push(id);
-					$(event.currentTarget).addClass('hide');
-					$('.list-'+id+' .remove-from-fav').removeClass('hide');					
-					saveFavList();
-				}
-
-			});
-
-			$('.remove-from-fav').click(event => {
-				console.log(event.currentTarget.dataset.id);
-				let id = event.currentTarget.dataset.id || 0;
-				if(id){
-					removeFromList(favList, id, "Id");
-					removeFromList(favListIds, id);
-					$(event.currentTarget).addClass('hide');
-					$('.list-'+id+' .add-to-fav').removeClass('hide');
-					saveFavList();
-				}
-			});
 
 		});
 	}
@@ -192,20 +165,52 @@
 			return element.Id == key;
 		})
 	}
-	function removeFromList(list, key, identifier){
+	function removeFromList(list, key, identifier) {
 		let index = list.findIndex(elem => {
-			if(identifier)
+			if (identifier)
 				return elem[identifier] == key;
-			else 
+			else
 				return elem == key;
-			});
-			list.splice(index, 1)
+		});
+		list.splice(index, 1)
 	}
 
 	function moreData() {
 		populateList(allData.slice(startIndex, lastIndex));
 		startIndex += chunk;
 		lastIndex += chunk;
+	}
+
+	function cardEvents() {
+		// Card Events
+		$('.add-to-fav').off('click');
+		$('.add-to-fav').click(event => {
+			console.log(event.currentTarget.dataset.id);
+			let id = event.currentTarget.dataset.id || 0;
+			let listItem = getListItemById(allData, id);
+			if (listItem) {
+				favList.push(listItem);
+				favListIds.push(id);
+				$(event.currentTarget).addClass('hide');
+				$('.list-' + id + ' .remove-from-fav').removeClass('hide');
+				saveFavList();
+			}
+
+		});
+
+		$('.remove-from-fav').off('click');
+
+		$('.remove-from-fav').click(event => {
+			console.log(event.currentTarget.dataset.id);
+			let id = event.currentTarget.dataset.id || 0;
+			if (id) {
+				removeFromList(favList, id, "Id");
+				removeFromList(favListIds, id);
+				$(event.currentTarget).addClass('hide');
+				$('.list-' + id + ' .add-to-fav').removeClass('hide');
+				saveFavList();
+			}
+		});
 	}
 
 	function getALLData() {
@@ -216,7 +221,7 @@
 
 
 	function initalize(vCsvData) {
-	//	populateList(vCsvData);
+		//	populateList(vCsvData);
 
 
 		// Group by Category
@@ -271,6 +276,12 @@
 
 	function populateSubCategorySelect(subCateogiesList) {
 
+		if (subCateogiesList.length == 0 || !subCateogiesList[0]) {
+			subCategorySelectEle.hide();
+			return;
+		}
+		subCategorySelectEle.show();
+
 		subCategorySelectEle.material_select('destroy');
 		subCategorySelectEle.html('<option value="" disabled selected>Choose your option</option>')
 
@@ -317,14 +328,18 @@
 						<div class="col s10 left-align"> \
 							<div class="chip"> \
 								' + element.Category + '\
-							</div> \
-							<div class="chip"> \
-								' + element.SubCategory + '\
-							</div> \
-						</div> \
+							</div>'
+			if (element.SubCategory) {
+				collectionItemsStr +=
+					'<div class="chip"> \
+										' + element.SubCategory + '\
+									</div> ';
+			}
+			collectionItemsStr +=
+				'</div> \
 						<div class="col s2"> \
-							<a href="#!" class="secondary-content red-text lighten-1 add-to-fav" data-id='+ element.Id +'><i class="material-icons">favorite_border</i></a> \
-							<a href="#!" class="secondary-content red-text lighten-1 remove-from-fav hide" data-id='+ element.Id +'><i class="material-icons">favorite</i></a> \
+							<a href="#!" class="secondary-content red-text lighten-1 add-to-fav" data-id='+ element.Id + '><i class="material-icons">favorite_border</i></a> \
+							<a href="#!" class="secondary-content red-text lighten-1 remove-from-fav hide" data-id='+ element.Id + '><i class="material-icons">favorite</i></a> \
 						</div> \
 					</div> \
 				</li>';
@@ -333,9 +348,11 @@
 		$('.collection').append(collectionItemsStr);
 
 		favListIds.forEach(id => {
-			$('.list-'+ id + ' .add-to-fav').addClass('hide');
-			$('.list-'+ id + ' .remove-from-fav').removeClass('hide');
-		})
+			$('.list-' + id + ' .add-to-fav').addClass('hide');
+			$('.list-' + id + ' .remove-from-fav').removeClass('hide');
+		});
+
+		cardEvents();
 	};
 
 	function clearList() {
@@ -371,7 +388,7 @@
 		searchBoxEle.toggleClass('hide');
 		searchBtnEle.toggleClass('red-text');
 		$('#search-input').focus();
-		if(searchBoxEle.hasClass('hide')) {
+		if (searchBoxEle.hasClass('hide')) {
 			navbarFixedEle.height(56);
 
 		} else {
@@ -380,7 +397,7 @@
 	});
 
 	$('#search-check').click(() => {
-		let searchText =  $('#search-input').val();
+		let searchText = $('#search-input').val();
 		setTimeout(() => {
 			console.log('search - ', searchText);
 			clearList();
