@@ -37,3 +37,23 @@
 .select-wrapper + label {
   top:-34px !important;
 }
+
+.tabs-content.carousel.initialized .carousel-item.active{
+  position: relative;
+  height: auto;
+}
+
+.tabs .tab a {
+  color: #0D47A1 !important;
+  background-color: #FFF !important;
+}
+
+.tabs .tab a.active {
+  color: #FFF !important;
+  background-color: #0D47A1 !important;
+}
+
+.tabs .indicator {
+  background-color: #0D47A1 !important;
+  height: 4px;
+}

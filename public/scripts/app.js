@@ -31,7 +31,11 @@
 		$('select').material_select();
 		$('.button-collapse').sideNav();
 		$('ul.tabs').tabs({
-			swipeable: true,
+			swipeable: false,
+			onShow: function(ct){
+				console.log(ct);
+				$('.tabs-content.carousel.initialized').css("height","auto");
+			}
 		});
 	});
 
@@ -59,11 +63,14 @@
 	function getFavList() {
 		favListIds = JSON.parse(localStorage.getItem('favListIds')) || [];
 		favList = JSON.parse(localStorage.getItem('favList')) || [];
+		clearFavList();
+		populateFavList(favList);
 	}
 
 	function saveFavList() {
 		localStorage.setItem("favListIds", JSON.stringify(favListIds));
 		localStorage.setItem("favList", JSON.stringify(favList));
+		getFavList();
 	}
 
 	function loadData() {
@@ -87,9 +94,10 @@
 			for (let i = 0; i < allData.length; i += chunk) {
 				if (i) {
 					var option = {
-						selector: '.list-' + (i - 10),
+						selector: '.collection.all .list-' + (i - 10),
 						offset: 200,
-						callback: function () {
+						callback: function (ce) {
+							console.log(ce);
 							moreData();
 						},
 						done: false
@@ -191,7 +199,7 @@
 			if (listItem) {
 				favList.push(listItem);
 				favListIds.push(id);
-				$(event.currentTarget).addClass('hide');
+				$('.list-' + id + ' .add-to-fav').addClass('hide');
 				$('.list-' + id + ' .remove-from-fav').removeClass('hide');
 				saveFavList();
 			}
@@ -206,7 +214,7 @@
 			if (id) {
 				removeFromList(favList, id, "Id");
 				removeFromList(favListIds, id);
-				$(event.currentTarget).addClass('hide');
+				$('.list-' + id + ' .remove-from-fav').addClass('hide');
 				$('.list-' + id + ' .add-to-fav').removeClass('hide');
 				saveFavList();
 			}
@@ -307,6 +315,61 @@
 		storeSelectEle.material_select();
 	}
 
+	function populateFavList(vCsvData) {
+
+		let collectionItemsStr = '';
+
+		if(vCsvData.length === 0){
+			collectionItemsStr += 
+			'<li class="collection-header"> \
+				<h6> Favorites are empty </h6>\
+			</li>';
+		}
+
+		vCsvData.forEach(element => {
+			if (!element.Product) return;
+
+			collectionItemsStr +=
+				'<li class="collection-item card list-' + element.Id + '"> \
+					<h6 class="card-title">' + element.Product + '</h6> \
+					<p>	\
+						' + element.Store + ' - \
+						  ' + element.Price + ' \
+					</p>	\
+					<p class="flow-text"> \
+						' + element.Notes + '\
+					</p> \
+					<div class="row" style="margin-bottom:0"> \
+						<div class="col s10 left-align"> \
+							<div class="chip"> \
+								' + element.Category + '\
+							</div>'
+			if (element.SubCategory) {
+				collectionItemsStr +=
+					'<div class="chip"> \
+										' + element.SubCategory + '\
+									</div> ';
+			}
+			collectionItemsStr +=
+				'</div> \
+						<div class="col s2"> \
+							<a href="#!" class="secondary-content red-text lighten-1 add-to-fav" data-id='+ element.Id + '><i class="material-icons">favorite_border</i></a> \
+							<a href="#!" class="secondary-content red-text lighten-1 remove-from-fav hide" data-id='+ element.Id + '><i class="material-icons">favorite</i></a> \
+						</div> \
+					</div> \
+				</li>';
+
+		});
+		$('.collection.fav').append(collectionItemsStr);
+
+		favListIds.forEach(id => {
+			$('.list-' + id + ' .add-to-fav').addClass('hide');
+			$('.list-' + id + ' .remove-from-fav').removeClass('hide');
+		});
+
+		cardEvents();
+	};
+
 	function populateList(vCsvData) {
 
 		let collectionItemsStr = '';
@@ -345,7 +408,7 @@
 				</li>';
 
 		});
-		$('.collection').append(collectionItemsStr);
+		$('.collection.all').append(collectionItemsStr);
 
 		favListIds.forEach(id => {
 			$('.list-' + id + ' .add-to-fav').addClass('hide');
@@ -357,6 +420,9 @@
 
 	function clearList() {
 		$('.collection').html('');
+	}
+	function clearFavList() {
+		$('.collection.fav').html('');
 	}
 
 	$('.close-side-nav').click(() => {
